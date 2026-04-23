@@ -1,4 +1,4 @@
-package com.lucnghinh.laptop_store.Entity;
+package com.lucnghinh.laptop_store.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
