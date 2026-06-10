@@ -1,12 +1,16 @@
 package com.lucnghinh.laptop_store.service;
 
-import com.lucnghinh.laptop_store.entity.Product;
-import com.lucnghinh.laptop_store.repository.ProductRepo;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.List;
+import com.lucnghinh.laptop_store.dto.ProductDetailResponse;
+import com.lucnghinh.laptop_store.dto.ProductRequest;
+import com.lucnghinh.laptop_store.dto.ProductResponse;
+import com.lucnghinh.laptop_store.entity.Product;
+import com.lucnghinh.laptop_store.exception.ResourceNotFoundException;
+import com.lucnghinh.laptop_store.repository.ProductRepo;
 
 @Service
 public class ProductService {
@@ -14,25 +18,66 @@ public class ProductService {
     @Autowired
     ProductRepo productRepo;
 
-    public Product getProductById(String id) {
-        return productRepo.findById(id).get();
+    public ProductDetailResponse getProductById(String id) {
+        Product product = productRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
+
+        ProductDetailResponse productDetailResponse = new ProductDetailResponse(
+                product.getId(),
+        product.getName(),
+        product.getDescription(),
+        product.getPrice(),
+        product.getDiscountPrice(),
+        product.getBrand(),
+        product.getCategory(),
+        product.getSlug(),
+        product.getThumbnail(),
+                product.getStock()
+        );
+
+        return productDetailResponse;
+
     }
 
-    public List<Product> getAllProducts() {
-        return productRepo.findAll();
+    public List<ProductResponse> getAllProducts() {
+        List<Product> products = productRepo.findAll();
+
+        return products.stream()
+                .map(product -> new ProductResponse(
+                        product.getId(),
+                        product.getName(),
+                        product.getPrice(),
+                        product.getDiscountPrice(),
+                        product.getSlug(),
+                        product.getThumbnail()
+                )).toList();
     }
 
     public void deleteProductById(String id) {
+        Product product = productRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
         productRepo.deleteById(id);
     }
 
-    public Product addProduct(Product product) {
-        return productRepo.save(product);
+    public ProductResponse addProduct(ProductRequest request) {
+        Product product = new Product();
+        product.setName(request.getName());
+        product.setDescription(request.getDescription());
+        product.setPrice(request.getPrice());
+        product.setDiscountPrice(request.getDiscountPrice());
+        product.setBrand(request.getBrand());
+        product.setCategory(request.getCategory());
+        product.setStock(request.getStock());
+        product.setSlug(request.getSlug());
+        product.setThumbnail(request.getThumbnail());
+        product.setActive(request.isActive());
+
+        Product savedProduct = productRepo.save(product);
+        return mapToProductResponse(savedProduct);
     }
 
-    public Product updateProductById(String id,Product request) {
+    public ProductResponse updateProductById(String id, ProductRequest request) {
         Product product = productRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
 
         product.setName(request.getName());
         product.setDescription(request.getDescription());
@@ -46,7 +91,19 @@ public class ProductService {
         product.setActive(request.isActive());
 
 
-        return productRepo.save(product);
+        Product updatedProduct = productRepo.save(product);
+        return mapToProductResponse(updatedProduct);
+    }
+
+    private ProductResponse mapToProductResponse(Product product) {
+        return new ProductResponse(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getDiscountPrice(),
+                product.getSlug(),
+                product.getThumbnail()
+        );
     }
 
 }

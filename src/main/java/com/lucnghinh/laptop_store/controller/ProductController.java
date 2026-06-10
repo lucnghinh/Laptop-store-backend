@@ -1,6 +1,8 @@
 package com.lucnghinh.laptop_store.controller;
 
-import com.lucnghinh.laptop_store.entity.Product;
+import com.lucnghinh.laptop_store.dto.ProductDetailResponse;
+import com.lucnghinh.laptop_store.dto.ProductRequest;
+import com.lucnghinh.laptop_store.dto.ProductResponse;
 import com.lucnghinh.laptop_store.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,23 +18,23 @@ public class ProductController {
 
 
     @GetMapping
-    public List<Product> getAllProducts() {
+    public List<ProductResponse> getAllProducts() {
         return productService.getAllProducts();
     }
 
     @GetMapping("/{id}")
-    public Product getProductById(@PathVariable String id) {
+    public ProductDetailResponse getProductById(@PathVariable String id) {
         return productService.getProductById(id);
     }
 
     @PostMapping
-    public Product addProduct(@RequestBody Product product) {
-        return productService.addProduct(product);
+    public ProductResponse addProduct(@RequestBody ProductRequest productRequest) {
+        return productService.addProduct(productRequest);
     }
 
     @PutMapping("/{id}")
-    public Product updateProductById(@PathVariable String id,@RequestBody Product product) {
-        return productService.updateProductById(id,product);
+    public ProductResponse updateProductById(@PathVariable String id, @RequestBody ProductRequest productRequest) {
+        return productService.updateProductById(id, productRequest);
     }
 
 
