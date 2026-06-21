@@ -2,6 +2,7 @@ package com.lucnghinh.laptop_store.controller;
 
 import java.util.List;
 
+import com.lucnghinh.laptop_store.dto.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,13 +39,23 @@ public class ProductController {
     }
 
     @PostMapping
-    public ProductResponse addProduct(@Valid @RequestBody ProductRequest productRequest) {
-        return productService.addProduct(productRequest);
+    public ApiResponse<ProductResponse> addProduct(@Valid @RequestBody ProductRequest productRequest) {
+        ProductResponse productResponse = productService.addProduct(productRequest);
+        ApiResponse<ProductResponse> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(1000);
+        apiResponse.setMessage("Success");
+        apiResponse.setData(productResponse);
+        return apiResponse;
     }
 
     @PutMapping("/{id}")
-    public ProductResponse updateProductById(@PathVariable String id,@Valid @RequestBody ProductRequest productRequest) {
-        return productService.updateProductById(id, productRequest);
+    public ApiResponse<ProductResponse> updateProductById(@PathVariable String id,@Valid @RequestBody ProductRequest productRequest) {
+         ProductResponse productResponse = productService.updateProductById(id, productRequest);
+         ApiResponse<ProductResponse> apiResponse = new ApiResponse<>();
+         apiResponse.setCode(1000);
+         apiResponse.setMessage("Success");
+         apiResponse.setData(productResponse);
+        return apiResponse;
     }
 
 

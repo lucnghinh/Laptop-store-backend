@@ -1,12 +1,13 @@
 package com.lucnghinh.laptop_store.exception;
 
+public class DuplicateProductException extends RuntimeException {
+    private ErrorCode errorCode;
 
-public class ResourceNotFoundException extends RuntimeException{
-    ErrorCode errorCode;
 
-    public ResourceNotFoundException(ErrorCode errorCode) {
+    public DuplicateProductException(ErrorCode errorCode) {
         super(errorCode.getMessage());
         this.errorCode = errorCode;
+
     }
 
     public ErrorCode getErrorCode() {

@@ -2,6 +2,8 @@ package com.lucnghinh.laptop_store.service;
 
 import java.util.List;
 
+import com.lucnghinh.laptop_store.exception.DuplicateProductException;
+import com.lucnghinh.laptop_store.exception.ErrorCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,7 @@ import com.lucnghinh.laptop_store.entity.Product;
 import com.lucnghinh.laptop_store.exception.ResourceNotFoundException;
 import com.lucnghinh.laptop_store.repository.ProductRepo;
 
+
 @Service
 public class ProductService {
 
@@ -19,7 +22,7 @@ public class ProductService {
     ProductRepo productRepo;
 
     public ProductDetailResponse getProductById(String id) {
-        Product product = productRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
+        Product product = productRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_DOES_NOT_EXIST));
 
         ProductDetailResponse productDetailResponse = new ProductDetailResponse(
                 product.getId(),
@@ -54,12 +57,16 @@ public class ProductService {
 
     public void deleteProductById(String id) {
         Product product = productRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_DOES_NOT_EXIST));
         productRepo.deleteById(id);
     }
 
-    public ProductResponse addProduct(ProductRequest request) {
+    public ProductResponse  addProduct(ProductRequest request) {
         Product product = new Product();
+
+        if (productRepo.existsByname(request.getName())) {
+            throw new DuplicateProductException(ErrorCode.PRODUCT_EXISTED);
+        }
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
@@ -77,7 +84,7 @@ public class ProductService {
 
     public ProductResponse updateProductById(String id, ProductRequest request) {
         Product product = productRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_DOES_NOT_EXIST));
 
         product.setName(request.getName());
         product.setDescription(request.getDescription());

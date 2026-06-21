@@ -16,37 +16,37 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProductRequest {
 
-    @NotBlank(message = "Name is required")
-    @Size(max = 255, message = "Name must be at most 255 characters")
+    @NotBlank(message = "PRODUCT_NAME_REQUIRED")
+    @Size(max = 255, message = "PRODUCT_NAME_MAX_LENGTH")
     private String name;
 
-    @Size(max = 2000, message = "Description must be at most 2000 characters")
+    @Size(max = 2000, message = "PRODUCT_DESCRIPTION_MAX_LENGTH")
     private String description;
 
-    @NotNull(message = "Price is required")
-    @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
+    @NotNull(message = "PRODUCT_PRICE_REQUIRED")
+    @DecimalMin(value = "0.0", inclusive = false, message = "PRODUCT_PRICE_INVALID")
     private BigDecimal Price;
 
-    @NotNull(message = "discountPrice is required")
-    @DecimalMin(value = "0.0", inclusive = false, message = "discountPrice must be greater than 0")
+    @NotNull(message = "PRODUCT_DISCOUNT_PRICE_REQUIRED")
+    @DecimalMin(value = "0.0", inclusive = false, message = "PRODUCT_DISCOUNT_PRICE_INVALID")
     private BigDecimal discountPrice;
 
-    @NotBlank(message = "Brand is required")
-    @Size(max = 100, message = "Brand must be at most 100 characters")
+    @NotBlank(message = "PRODUCT_BRAND_REQUIRED")
+    @Size(max = 100, message = "PRODUCT_BRAND_MAX_LENGTH")
     private String brand;
 
-    @NotBlank(message = "Category is required")
-    @Size(max = 100, message = "Category must be at most 100 characters")
+    @NotBlank(message = "PRODUCT_CATEGORY_REQUIRED")
+    @Size(max = 100, message = "PRODUCT_CATEGORY_MAX_LENGTH")
     private String category;
 
-    @NotBlank(message = "Slug is required")
-    @Size(max = 255, message = "Slug must be at most 255 characters")
+    @NotBlank(message = "PRODUCT_SLUG_REQUIRED")
+    @Size(max = 255, message = "PRODUCT_SLUG_MAX_LENGTH")
     private String slug;
 
-    @Min(value = 0, message = "Stock must be greater than 0")
+    @Min(value = 0, message = "PRODUCT_STOCK_INVALID")
     private int stock;
 
-    @Size(max = 500, message = "Thumbnail must be at most 500 characters")
+    @Size(max = 500, message = "PRODUCT_THUMBNAIL_MAX_LENGTH")
     private String thumbnail;
 
     private boolean active;
