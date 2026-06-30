@@ -1,10 +1,10 @@
 package com.lucnghinh.laptop_store.exception;
 
-public class DuplicateProductException extends RuntimeException {
+public class DuplicateResourceException extends RuntimeException {
     private ErrorCode errorCode;
 
 
-    public DuplicateProductException(ErrorCode errorCode) {
+    public DuplicateResourceException(ErrorCode errorCode) {
         super(errorCode.getMessage());
         this.errorCode = errorCode;
 
@@ -18,3 +18,4 @@ public class DuplicateProductException extends RuntimeException {
         this.errorCode = errorCode;
     }
 }
+

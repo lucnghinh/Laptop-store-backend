@@ -1,7 +1,8 @@
-package com.lucnghinh.laptop_store.dto;
+package com.lucnghinh.laptop_store.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,8 +10,14 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ApiResponse<T> {
-    private int code;
-    private String message;
+
+    @Builder.Default
+    private int code = 1000;
+
+    @Builder.Default
+    private String message = "success";
+
     private T data;
 }

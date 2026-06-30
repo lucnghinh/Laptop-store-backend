@@ -1,4 +1,4 @@
-package com.lucnghinh.laptop_store.dto;
+package com.lucnghinh.laptop_store.dto.request;
 
 import java.math.BigDecimal;
 

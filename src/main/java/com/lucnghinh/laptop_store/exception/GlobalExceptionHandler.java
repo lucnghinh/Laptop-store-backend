@@ -1,13 +1,8 @@
 package com.lucnghinh.laptop_store.exception;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import com.lucnghinh.laptop_store.dto.ApiResponse;
-import com.lucnghinh.laptop_store.dto.ProductResponse;
+import com.lucnghinh.laptop_store.dto.response.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -41,12 +36,22 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(apiResponse);
     }
 
-    @ExceptionHandler(DuplicateProductException.class)
-    public ResponseEntity<ApiResponse> handleDuplicateProductException(DuplicateProductException e) {
-        ErrorCode errorCode = e.getErrorCode();
+
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<ApiResponse> handleDuplicateResourceException(DuplicateResourceException duplicateResourceException){
+        ErrorCode errorCode = duplicateResourceException.getErrorCode();
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setCode(errorCode.getCode());
         apiResponse.setMessage(errorCode.getMessage());
-       return ResponseEntity.status(HttpStatus.CONFLICT).body(apiResponse);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(apiResponse);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiResponse> handleAuthenticationException(AuthenticationException authenticationException){
+        ErrorCode errorCode = authenticationException.getErrorCode();
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setCode(errorCode.getCode());
+        apiResponse.setMessage(errorCode.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
     }
 }

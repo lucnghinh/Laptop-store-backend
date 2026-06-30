@@ -15,3 +15,11 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+
+
+jwt:
+  secret: 2de2d4409d1eb38bb57c092d5734ecdde510d5bacb0033023a4a83fae17c797c
+
+logging:
+  level:
+    org.springframework.security: TRACE

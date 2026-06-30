@@ -1,8 +1,13 @@
 package com.lucnghinh.laptop_store.exception;
 
 public enum ErrorCode {
-    PRODUCT_EXISTED(1003,"Product exists with name"),
-    PRODUCT_DOES_NOT_EXIST(1004,"Product does not exist"),
+    //ERROR KEYENUM
+    INVALID_KEY(1001,"Invalid message key"),
+
+
+    //ERROR PRODUCT
+    PRODUCT_ALREADY_EXISTS(1003,"Product exists with name"),
+    PRODUCT_NOT_FOUND(1004,"Product does not exist"),
 
     PRODUCT_NAME_REQUIRED(1005,"Name required"),
     PRODUCT_NAME_MAX_LENGTH(1006, "Name must be at most 255 characters"),
@@ -28,10 +33,36 @@ public enum ErrorCode {
 
     PRODUCT_THUMBNAIL_MAX_LENGTH(1019, "Thumbnail must be at most 500 characters"),
 
-    INVALID_KEY(1001,"Invalid message key")
+    //ERROR USER
+    USER_USERNAME_REQUIRED(1020, "Username is required"),
+    USER_USERNAME_INVALID(1021, "Username must be between 3 and 50 characters"),
+
+    USER_PASSWORD_REQUIRED(1022, "Password is required"),
+    USER_PASSWORD_INVALID(1023, "Password must be between 8 and 255 characters"),
+
+
+    USER_EMAIL_REQUIRED(1024, "Email is required"),
+    USER_EMAIL_INVALID(1025, "Email is invalid"),
+
+    USER_FIRST_NAME_REQUIRED(1026, "First name is required"),
+
+    USER_LAST_NAME_REQUIRED(1027, "Last name is required"),
+
+    USER_DOB_REQUIRED(1028, "Date of birth is required"),
+
+    USER_USERNAME_ALREADY_EXISTS(1029, "Username already exists"),
+
+    USER_EMAIL_ALREADY_EXISTS(1030, "Email already exists"),
+
+
+
+//    Unauthenticated
+    INVALID_CREDENTIALS(1031, "Username or password is incorrect"),
+    INVALID_TOKEN(1032, "Invalid token"),
+    TOKEN_EXPIRED(1033, "Token has expired");
     ;
-    private int code;
-    private String message;
+    private final int code;
+    private final String message;
 
     ErrorCode(int code, String message) {
         this.message = message;
@@ -42,15 +73,9 @@ public enum ErrorCode {
         return message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
 
     public int getCode() {
         return code;
     }
 
-    public void setCode(int code) {
-        this.code = code;
-    }
 }

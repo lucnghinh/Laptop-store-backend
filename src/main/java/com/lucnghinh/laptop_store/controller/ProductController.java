@@ -2,7 +2,7 @@ package com.lucnghinh.laptop_store.controller;
 
 import java.util.List;
 
-import com.lucnghinh.laptop_store.dto.ApiResponse;
+import com.lucnghinh.laptop_store.dto.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lucnghinh.laptop_store.dto.ProductDetailResponse;
-import com.lucnghinh.laptop_store.dto.ProductRequest;
-import com.lucnghinh.laptop_store.dto.ProductResponse;
+import com.lucnghinh.laptop_store.dto.response.ProductDetailResponse;
+import com.lucnghinh.laptop_store.dto.request.ProductRequest;
+import com.lucnghinh.laptop_store.dto.response.ProductResponse;
 import com.lucnghinh.laptop_store.service.ProductService;
 
 import jakarta.validation.Valid;
