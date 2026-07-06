@@ -4,7 +4,12 @@ import java.util.List;
 
 import com.lucnghinh.laptop_store.exception.DuplicateResourceException;
 import com.lucnghinh.laptop_store.exception.ErrorCode;
+import com.lucnghinh.laptop_store.mapper.ProductMapper;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.lucnghinh.laptop_store.dto.response.ProductDetailResponse;
@@ -14,103 +19,49 @@ import com.lucnghinh.laptop_store.entity.Product;
 import com.lucnghinh.laptop_store.exception.ResourceNotFoundException;
 import com.lucnghinh.laptop_store.repository.ProductRepository;
 
-
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Service
 public class ProductService {
-
-    @Autowired
     ProductRepository productRepository;
+    ProductMapper productMapper;
 
     public ProductDetailResponse getProductById(String id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
-
-        ProductDetailResponse productDetailResponse = new ProductDetailResponse(
-                product.getId(),
-        product.getName(),
-        product.getDescription(),
-        product.getPrice(),
-        product.getDiscountPrice(),
-        product.getBrand(),
-        product.getCategory(),
-        product.getSlug(),
-        product.getThumbnail(),
-                product.getStock()
-        );
-
-        return productDetailResponse;
-
+        return productMapper.toProductDetailResponse(product);
     }
 
     public List<ProductResponse> getAllProducts() {
         List<Product> products = productRepository.findAll();
-
-        return products.stream()
-                .map(product -> new ProductResponse(
-                        product.getId(),
-                        product.getName(),
-                        product.getPrice(),
-                        product.getDiscountPrice(),
-                        product.getSlug(),
-                        product.getThumbnail()
-                )).toList();
+        return productMapper.toProductResponseList(products);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteProductById(String id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
         productRepository.deleteById(id);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public ProductResponse  addProduct(ProductRequest request) {
-        Product product = new Product();
-
         if (productRepository.existsByname(request.getName())) {
             throw new DuplicateResourceException(ErrorCode.PRODUCT_ALREADY_EXISTS);
         }
-        product.setName(request.getName());
-        product.setDescription(request.getDescription());
-        product.setPrice(request.getPrice());
-        product.setDiscountPrice(request.getDiscountPrice());
-        product.setBrand(request.getBrand());
-        product.setCategory(request.getCategory());
-        product.setStock(request.getStock());
-        product.setSlug(request.getSlug());
-        product.setThumbnail(request.getThumbnail());
-        product.setActive(request.isActive());
 
-        Product savedProduct = productRepository.save(product);
-        return mapToProductResponse(savedProduct);
+        Product product = productMapper.toProduct(request);
+        product = productRepository.save(product);
+        return productMapper.toProductResponse(product);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public ProductResponse updateProductById(String id, ProductRequest request) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
 
-        product.setName(request.getName());
-        product.setDescription(request.getDescription());
-        product.setPrice(request.getPrice());
-        product.setDiscountPrice(request.getDiscountPrice());
-        product.setBrand(request.getBrand());
-        product.setCategory(request.getCategory());
-        product.setStock(request.getStock());
-        product.setSlug(request.getSlug());
-        product.setThumbnail(request.getThumbnail());
-        product.setActive(request.isActive());
-
-
-        Product updatedProduct = productRepository.save(product);
-        return mapToProductResponse(updatedProduct);
-    }
-
-    private ProductResponse mapToProductResponse(Product product) {
-        return new ProductResponse(
-                product.getId(),
-                product.getName(),
-                product.getPrice(),
-                product.getDiscountPrice(),
-                product.getSlug(),
-                product.getThumbnail()
-        );
+        Product mappedProduct = productMapper.toProduct(request);
+        mappedProduct = productRepository.save(mappedProduct);
+        return productMapper.toProductResponse(mappedProduct);
     }
 
 }

@@ -1,37 +1,41 @@
 package com.lucnghinh.laptop_store.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
 @Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
     @Column(nullable = false ,unique = true, length = 30)
-    private String username;
+    String username;
 
     @Column(nullable = false ,length = 255)
-    private String password;
+    String password;
 
     @Column(nullable = false ,unique = true,length = 255)
-    private String email;
+    String email;
 
     @Column(nullable = false, length = 50)
-    private String firstName;
+    String firstName;
 
     @Column(nullable = false, length = 50)
-    private String lastName;
-    private LocalDate dob;
+    String lastName;
+    LocalDate dob;
 
-
+    @ManyToMany
+    Set<Role> roles;
 }

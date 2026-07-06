@@ -37,6 +37,7 @@ public enum ErrorCode {
     USER_USERNAME_REQUIRED(1020, "Username is required"),
     USER_USERNAME_INVALID(1021, "Username must be between 3 and 50 characters"),
 
+
     USER_PASSWORD_REQUIRED(1022, "Password is required"),
     USER_PASSWORD_INVALID(1023, "Password must be between 8 and 255 characters"),
 
@@ -54,13 +55,15 @@ public enum ErrorCode {
 
     USER_EMAIL_ALREADY_EXISTS(1030, "Email already exists"),
 
-
-
 //    Unauthenticated
     INVALID_CREDENTIALS(1031, "Username or password is incorrect"),
     INVALID_TOKEN(1032, "Invalid token"),
-    TOKEN_EXPIRED(1033, "Token has expired");
-    ;
+    TOKEN_EXPIRED(1033, "Token has expired"),
+
+//    OTHER
+    USER_USERNAME_NOT_FOUND(1034, "Username not found");
+
+
     private final int code;
     private final String message;
 

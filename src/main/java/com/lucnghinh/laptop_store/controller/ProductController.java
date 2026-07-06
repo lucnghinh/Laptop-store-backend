@@ -3,6 +3,9 @@ package com.lucnghinh.laptop_store.controller;
 import java.util.List;
 
 import com.lucnghinh.laptop_store.dto.response.ApiResponse;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,11 +25,10 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/products")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ProductController {
-
-    @Autowired
     ProductService productService;
-
 
     @GetMapping
     public List<ProductResponse> getAllProducts() {
@@ -42,8 +44,6 @@ public class ProductController {
     public ApiResponse<ProductResponse> addProduct(@Valid @RequestBody ProductRequest productRequest) {
         ProductResponse productResponse = productService.addProduct(productRequest);
         ApiResponse<ProductResponse> apiResponse = new ApiResponse<>();
-        apiResponse.setCode(1000);
-        apiResponse.setMessage("Success");
         apiResponse.setData(productResponse);
         return apiResponse;
     }
@@ -52,8 +52,6 @@ public class ProductController {
     public ApiResponse<ProductResponse> updateProductById(@PathVariable String id,@Valid @RequestBody ProductRequest productRequest) {
          ProductResponse productResponse = productService.updateProductById(id, productRequest);
          ApiResponse<ProductResponse> apiResponse = new ApiResponse<>();
-         apiResponse.setCode(1000);
-         apiResponse.setMessage("Success");
          apiResponse.setData(productResponse);
         return apiResponse;
     }

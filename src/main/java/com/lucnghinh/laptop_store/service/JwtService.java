@@ -34,6 +34,7 @@ public class JwtService {
                 .issuer("Laptop-store-Lucnghinh.com")
                 .issueTime(new Date())
                 .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
+//                .claim("role", user.getRole().name())
                 .build();
 
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
@@ -50,6 +51,7 @@ public class JwtService {
 
 
     public JWSObject verifyToken(String token){
+
         try {
             JWSObject jwsObject = JWSObject.parse(token);
             boolean verifiedSignature = jwsObject.verify(new MACVerifier(secret.getBytes()));

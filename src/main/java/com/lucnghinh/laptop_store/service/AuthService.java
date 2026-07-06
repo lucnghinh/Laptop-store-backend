@@ -34,6 +34,7 @@ public class AuthService {
     JwtService jwtService;
 
 
+
     public AuthResponse register(RegisterRequest request) {
         if(userRepository.existsByUsername(request.getUsername())){
             throw new DuplicateResourceException(ErrorCode.USER_USERNAME_ALREADY_EXISTS);
@@ -49,6 +50,7 @@ public class AuthService {
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setDob(request.getDob());
+//        user.setRoles();
         User savedUser = userRepository.save(user);
 
         var token = jwtService.generateToken(savedUser);
@@ -59,15 +61,6 @@ public class AuthService {
 
 
     public AuthResponse login(LoginRequest request) {
-//        User user = userRepository.findByUsername(request.getUsername())
-//                .orElseThrow(() -> new AuthenticationException(ErrorCode.INVALID_CREDENTIALS));
-//
-//        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())){
-//            throw new AuthenticationException(ErrorCode.INVALID_CREDENTIALS);
-//        }
-//        return  AuthResponse.builder()
-//                .token(jwtService.generateToken(user))
-//                .build();
         Authentication authentication;
         try {
             authentication = authenticationManager.authenticate(
