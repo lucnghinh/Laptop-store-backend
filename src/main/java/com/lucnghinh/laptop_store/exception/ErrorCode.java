@@ -61,7 +61,9 @@ public enum ErrorCode {
     TOKEN_EXPIRED(1033, "Token has expired"),
 
 //    OTHER
-    USER_USERNAME_NOT_FOUND(1034, "Username not found");
+    USER_USERNAME_NOT_FOUND(1034, "Username not found"),
+
+    ROLE_NOT_FOUND(1035, "Role not found"),;
 
 
     private final int code;

@@ -3,12 +3,16 @@ package com.lucnghinh.laptop_store.service;
 import com.lucnghinh.laptop_store.dto.request.LoginRequest;
 import com.lucnghinh.laptop_store.dto.request.RegisterRequest;
 import com.lucnghinh.laptop_store.dto.response.AuthResponse;
+import com.lucnghinh.laptop_store.entity.Role;
 import com.lucnghinh.laptop_store.entity.User;
 
 import com.lucnghinh.laptop_store.exception.AuthenticationException;
 import com.lucnghinh.laptop_store.exception.DuplicateResourceException;
 import com.lucnghinh.laptop_store.exception.ErrorCode;
 
+import com.lucnghinh.laptop_store.exception.ResourceNotFoundException;
+import com.lucnghinh.laptop_store.mapper.UserMapper;
+import com.lucnghinh.laptop_store.repository.RoleRepository;
 import com.lucnghinh.laptop_store.repository.UserRepository;
 import com.lucnghinh.laptop_store.security.CustomUserDetails;
 import lombok.AccessLevel;
@@ -22,6 +26,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +39,8 @@ public class AuthService {
     UserRepository userRepository;
     PasswordEncoder passwordEncoder;
     JwtService jwtService;
+    UserMapper userMapper;
+    RoleRepository roleRepository;
 
 
 
@@ -43,14 +52,10 @@ public class AuthService {
             throw new DuplicateResourceException(ErrorCode.USER_EMAIL_ALREADY_EXISTS);
         }
 
-        User user = new User();
-        user.setUsername(request.getUsername());
-        user.setEmail(request.getEmail());
+        User user = userMapper.toUser(request);
+        Role role = roleRepository.findById("USER").orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ROLE_NOT_FOUND));
+        user.setRoles(new HashSet<>(List.of(role)));
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setDob(request.getDob());
-//        user.setRoles();
         User savedUser = userRepository.save(user);
 
         var token = jwtService.generateToken(savedUser);
