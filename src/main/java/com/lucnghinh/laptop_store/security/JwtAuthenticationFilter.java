@@ -1,5 +1,6 @@
 package com.lucnghinh.laptop_store.security;
 
+import com.lucnghinh.laptop_store.config.JwtAuthenticationEntryPoint;
 import com.lucnghinh.laptop_store.exception.AuthenticationException;
 import com.lucnghinh.laptop_store.exception.ErrorCode;
 import com.lucnghinh.laptop_store.service.JwtService;
@@ -27,6 +28,7 @@ import java.text.ParseException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     JwtService jwtService;
     CustomUserDetailsService customUserDetailsService;
+    JwtAuthenticationEntryPoint  jwtAuthenticationEntryPoint;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -37,9 +39,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             String jwt =  authHeader.substring(7);
 
-            JWSObject jwsObject = jwtService.verifyToken(jwt);
-
         try{
+            JWSObject jwsObject = jwtService.verifyToken(jwt);
 
             JWTClaimsSet jwtClaimsSet = JWTClaimsSet.parse(jwsObject.getPayload().toJSONObject());
             String username = jwtClaimsSet.getSubject();
@@ -50,9 +51,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
 
-        } catch (ParseException e){
-            throw  new AuthenticationException(ErrorCode.INVALID_TOKEN);
-        }
+        } catch (AuthenticationException e) {
+        request.setAttribute("exception", e);
+        } catch (ParseException e) {
+        request.setAttribute("exception", new AuthenticationException(ErrorCode.INVALID_TOKEN));
+    }
         filterChain.doFilter(request, response);
     }
 }

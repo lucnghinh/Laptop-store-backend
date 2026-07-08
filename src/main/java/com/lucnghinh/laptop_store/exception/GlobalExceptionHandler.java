@@ -1,8 +1,8 @@
 package com.lucnghinh.laptop_store.exception;
 
 import com.lucnghinh.laptop_store.dto.response.ApiResponse;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,10 +13,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiResponse> handleResourceNotFoundException(ResourceNotFoundException e) {
         ErrorCode errorCode = e.getErrorCode();
-        ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setCode(errorCode.getCode());
-        apiResponse.setMessage(errorCode.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiResponse);
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(ApiResponse.builder()
+                        .code(errorCode.getCode())
+                        .message(errorCode.getMessage())
+                .build());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -30,28 +30,28 @@ public class GlobalExceptionHandler {
 
         }
 
-        ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setCode(errorCode.getCode());
-        apiResponse.setMessage(errorCode.getMessage());
-        return ResponseEntity.badRequest().body(apiResponse);
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(ApiResponse.builder()
+                .code(errorCode.getCode())
+                .message(errorCode.getMessage())
+                .build());
     }
 
 
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<ApiResponse> handleDuplicateResourceException(DuplicateResourceException duplicateResourceException){
         ErrorCode errorCode = duplicateResourceException.getErrorCode();
-        ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setCode(errorCode.getCode());
-        apiResponse.setMessage(errorCode.getMessage());
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(apiResponse);
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(ApiResponse.builder()
+                .code(errorCode.getCode())
+                .message(errorCode.getMessage())
+                .build());
     }
 
-    @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<ApiResponse> handleAuthenticationException(AuthenticationException authenticationException){
-        ErrorCode errorCode = authenticationException.getErrorCode();
-        ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setCode(errorCode.getCode());
-        apiResponse.setMessage(errorCode.getMessage());
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ApiResponse> handleAccessDeniedException(AuthorizationDeniedException authorizationDeniedException){
+        ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(ApiResponse.builder()
+                        .code(errorCode.getCode())
+                        .message(errorCode.getMessage())
+                        .build());
     }
 }

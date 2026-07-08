@@ -1,15 +1,12 @@
 package com.lucnghinh.laptop_store.config;
 
-import com.lucnghinh.laptop_store.security.CustomUserDetails;
 import com.lucnghinh.laptop_store.security.CustomUserDetailsService;
 import com.lucnghinh.laptop_store.security.JwtAuthenticationFilter;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -31,6 +28,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     CustomUserDetailsService customUserDetailsService;
     JwtAuthenticationFilter jwtAuthenticationFilter;
+    JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -61,6 +59,10 @@ public class SecurityConfig {
                 );
 
         http.csrf(AbstractHttpConfigurer:: disable);
+
+        http.exceptionHandling(exception -> exception
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+        );
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

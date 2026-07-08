@@ -1,21 +1,43 @@
 package com.lucnghinh.laptop_store.config;
 
+import com.lucnghinh.laptop_store.entity.Role;
 import com.lucnghinh.laptop_store.entity.User;
+import com.lucnghinh.laptop_store.exception.ErrorCode;
+import com.lucnghinh.laptop_store.exception.ResourceNotFoundException;
+import com.lucnghinh.laptop_store.repository.RoleRepository;
 import com.lucnghinh.laptop_store.repository.UserRepository;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @Slf4j
 @Configuration
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class ApplicationInitConfig {
+    RoleRepository roleRepository;
 
     @Bean
     public ApplicationRunner applicationRunner(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-
         return args -> {
+
+//            if(roleRepository.findById("ADMIN").isEmpty()){
+//                Role role = Role.builder()
+//                        .name("ADMIN")
+//                        .description("Admin role")
+//                        .permissions(new HashSet<>())
+//                        .build();
+//            }
+
             if(userRepository.findByUsername("admin").isEmpty()) {
                 User user = User.builder()
                         .username("admin")
@@ -23,7 +45,7 @@ public class ApplicationInitConfig {
                         .firstName("System")
                         .lastName("Administrator")
                         .email("admin@localhost")
-//                        .role(Role.ADMIN)
+//                        .roles(Set.of(adminRole))
                         .build();
 
                 userRepository.save(user);

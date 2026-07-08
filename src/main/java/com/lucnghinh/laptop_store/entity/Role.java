@@ -1,10 +1,7 @@
 package com.lucnghinh.laptop_store.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.HashSet;
@@ -16,7 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "roles")
-
+@Builder
 public class Role {
     @Id
     String name;

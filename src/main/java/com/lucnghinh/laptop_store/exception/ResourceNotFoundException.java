@@ -1,7 +1,7 @@
 package com.lucnghinh.laptop_store.exception;
 
 
-public class ResourceNotFoundException extends RuntimeException{
+public class ResourceNotFoundException extends RuntimeException {
     ErrorCode errorCode;
 
     public ResourceNotFoundException(ErrorCode errorCode) {
