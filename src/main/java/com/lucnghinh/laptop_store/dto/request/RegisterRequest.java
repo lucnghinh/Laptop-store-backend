@@ -1,5 +1,6 @@
 package com.lucnghinh.laptop_store.dto.request;
 
+import com.lucnghinh.laptop_store.validator.DobConstraint;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -36,5 +37,6 @@ public class RegisterRequest {
     String lastName;
 
     @NotNull(message = "USER_DOB_REQUIRED")
+    @DobConstraint(min = 18, message = "USER_DOB_INVALID")
     LocalDate dob;
 }

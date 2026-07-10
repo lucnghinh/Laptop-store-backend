@@ -42,10 +42,10 @@ public enum ErrorCode {
 
     // ERROR USER
     USER_USERNAME_REQUIRED(1020, "Username is required", HttpStatus.BAD_REQUEST),
-    USER_USERNAME_INVALID(1021, "Username must be between 3 and 50 characters", HttpStatus.BAD_REQUEST),
+    USER_USERNAME_INVALID(1021, "Username must be between {min} and 50 characters", HttpStatus.BAD_REQUEST),
 
     USER_PASSWORD_REQUIRED(1022, "Password is required", HttpStatus.BAD_REQUEST),
-    USER_PASSWORD_INVALID(1023, "Password must be between 8 and 255 characters", HttpStatus.BAD_REQUEST),
+    USER_PASSWORD_INVALID(1023, "Password must be between {min} and 255 characters", HttpStatus.BAD_REQUEST),
 
     USER_EMAIL_REQUIRED(1024, "Email is required", HttpStatus.BAD_REQUEST),
     USER_EMAIL_INVALID(1025, "Email is invalid", HttpStatus.BAD_REQUEST),
@@ -70,7 +70,8 @@ public enum ErrorCode {
 
     ROLE_NOT_FOUND(1035, "Role not found", HttpStatus.NOT_FOUND),
     UNAUTHORIZED(1036, "you do not have permission", HttpStatus.FORBIDDEN),
-    UNAUTHENTICATED(1037,"unauthenticated",HttpStatus.UNAUTHORIZED);
+    UNAUTHENTICATED(1037,"unauthenticated",HttpStatus.UNAUTHORIZED),
+    USER_DOB_INVALID(1038, "Your age must be at least {min}", HttpStatus.BAD_REQUEST);
 
     ErrorCode(int code, String message,HttpStatus httpStatus) {
         this.message = message;
