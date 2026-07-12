@@ -76,6 +76,15 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
+    @ExceptionHandler(AppException.class)
+    public ResponseEntity<ApiResponse> handleAppException(AppException appException){
+        ErrorCode errorCode = appException.getErrorCode();
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(ApiResponse.builder()
+                .code(errorCode.getCode())
+                .message(errorCode.getMessage())
+                .build());
+    }
+
     private String mapAttribute(String message, Map<String, Object> attributes) {
         String minValue = attributes.get(MIN_ATTRIBUTE).toString();
         return message.replace("{" + MIN_ATTRIBUTE +"}", minValue);

@@ -71,7 +71,10 @@ public enum ErrorCode {
     ROLE_NOT_FOUND(1035, "Role not found", HttpStatus.NOT_FOUND),
     UNAUTHORIZED(1036, "you do not have permission", HttpStatus.FORBIDDEN),
     UNAUTHENTICATED(1037,"unauthenticated",HttpStatus.UNAUTHORIZED),
-    USER_DOB_INVALID(1038, "Your age must be at least {min}", HttpStatus.BAD_REQUEST);
+    USER_DOB_INVALID(1038, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
+
+    INVALID_SORT_DIRECTION(1039, "invalid sort direction", HttpStatus.BAD_REQUEST),
+    INVALID_SORT_FIELD(1009, "Invalid sort field", HttpStatus.BAD_REQUEST);
 
     ErrorCode(int code, String message,HttpStatus httpStatus) {
         this.message = message;

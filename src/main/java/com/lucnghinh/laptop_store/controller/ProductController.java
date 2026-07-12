@@ -1,20 +1,12 @@
 package com.lucnghinh.laptop_store.controller;
 
-import java.util.List;
 
 import com.lucnghinh.laptop_store.dto.response.ApiResponse;
+import com.lucnghinh.laptop_store.dto.response.ProductPageResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.lucnghinh.laptop_store.dto.response.ProductDetailResponse;
 import com.lucnghinh.laptop_store.dto.request.ProductRequest;
@@ -29,11 +21,6 @@ import jakarta.validation.Valid;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ProductController {
     ProductService productService;
-
-    @GetMapping
-    public List<ProductResponse> getAllProducts() {
-        return productService.getAllProducts();
-    }
 
     @GetMapping("/{id}")
     public ProductDetailResponse getProductById(@PathVariable String id) {
@@ -62,6 +49,16 @@ public class ProductController {
         productService.deleteProductById(id);
     }
 
+    @GetMapping
+    public ApiResponse<ProductPageResponse> getProductsWithPagination(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction) {
 
+        return ApiResponse.<ProductPageResponse>builder()
+                .data(productService.getProductsWithPagination(page, size, sortBy, direction))
+                .build();
+    }
 
 }
