@@ -4,8 +4,10 @@ import com.lucnghinh.laptop_store.config.JwtAuthenticationEntryPoint;
 import com.lucnghinh.laptop_store.exception.AuthenticationException;
 import com.lucnghinh.laptop_store.exception.ErrorCode;
 import com.lucnghinh.laptop_store.service.JwtService;
+import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSObject;
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,10 +42,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String jwt =  authHeader.substring(7);
 
         try{
-            JWSObject jwsObject = jwtService.verifyToken(jwt);
+            SignedJWT signedJWT = jwtService.verifyAccessToken(jwt);
 
-            JWTClaimsSet jwtClaimsSet = JWTClaimsSet.parse(jwsObject.getPayload().toJSONObject());
-            String username = jwtClaimsSet.getSubject();
+            String username = signedJWT.getJWTClaimsSet().getSubject();
 
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);

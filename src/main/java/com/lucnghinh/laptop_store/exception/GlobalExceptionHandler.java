@@ -48,6 +48,15 @@ public class GlobalExceptionHandler {
                 .build());
     }
 
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiResponse> handleAuthenticationException(AuthenticationException authenticationException){
+        ErrorCode errorCode = authenticationException.getErrorCode();
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(ApiResponse.builder()
+                .code(errorCode.getCode())
+                .message(errorCode.getMessage())
+                .build());
+    }
+
 
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<ApiResponse> handleDuplicateResourceException(DuplicateResourceException duplicateResourceException){
