@@ -19,4 +19,6 @@ public class ProductResponse {
     BigDecimal discountPrice;
     String slug;
     String thumbnail;
+    String brand;
+    String category;
 }

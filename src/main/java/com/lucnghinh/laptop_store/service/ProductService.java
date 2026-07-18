@@ -1,11 +1,13 @@
 package com.lucnghinh.laptop_store.service;
 
 
+import com.lucnghinh.laptop_store.dto.request.ProductFilterRequest;
 import com.lucnghinh.laptop_store.dto.response.ProductPageResponse;
 import com.lucnghinh.laptop_store.exception.AppException;
 import com.lucnghinh.laptop_store.exception.DuplicateResourceException;
 import com.lucnghinh.laptop_store.exception.ErrorCode;
 import com.lucnghinh.laptop_store.mapper.ProductMapper;
+import com.lucnghinh.laptop_store.specification.ProductSpecification;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -76,9 +79,27 @@ public class ProductService {
         return productMapper.toProductResponse(mappedProduct);
     }
 
-    public ProductPageResponse getProductsWithPagination(int pageNumber, int size, String sortBy, String direction) {
+    public ProductPageResponse getProductsWithPagination(ProductFilterRequest productFilterRequest) {
 
-        if(!ALLOWED_SORT_FIELDS.contains(sortBy)) {
+
+
+        Specification<Product> specification = Specification.allOf(ProductSpecification.hasBrand(productFilterRequest.getBrand())
+                ,(ProductSpecification.hasCategory(productFilterRequest.getCategory()))
+                ,(ProductSpecification.hasName(productFilterRequest.getKeyword()))
+                ,(ProductSpecification.hasMinPrice(productFilterRequest.getMinPrice()))
+                ,(ProductSpecification.hasMaxPrice(productFilterRequest.getMaxPrice())));
+
+        String sortBy = productFilterRequest.getSortBy();
+        if (sortBy == null || sortBy.isBlank()) {
+            sortBy = "id";
+        }
+
+        String direction = productFilterRequest.getDirection();
+        if (direction == null || direction.isBlank()) {
+            direction = "asc";
+        }
+
+        if (!ALLOWED_SORT_FIELDS.contains(sortBy)) {
             throw new AppException(ErrorCode.INVALID_SORT_FIELD);
         }
 
@@ -90,14 +111,26 @@ public class ProductService {
                 ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
 
-        Pageable pageable = PageRequest.of(pageNumber, size, sort);
 
-        Page<Product> productPage = productRepository.findByActive(true, pageable);
+        if (productFilterRequest.getPageNumber() < 0) {
+            productFilterRequest.setPageNumber(0);
+        }
+
+        if (productFilterRequest.getSize() <= 0) {
+            productFilterRequest.setSize(10);
+        }
+
+        Pageable pageable = PageRequest.of(productFilterRequest.getPageNumber(), productFilterRequest.getSize(), sort);
+
+
+
+        Page<Product> productPage = productRepository.findAll(specification,pageable);
+
 
         return ProductPageResponse.builder()
                 .products(productMapper.toProductResponseList(productPage.getContent()))
-                .size(size)
-                .page(pageNumber)
+                .size(productFilterRequest.getSize())
+                .page(productFilterRequest.getPageNumber())
                 .totalElements(productPage.getTotalElements())
                 .totalPages(productPage.getTotalPages())
                 .first(productPage.isFirst())

@@ -28,7 +28,7 @@ public class ProductRequest {
 
     @NotNull(message = "PRODUCT_PRICE_REQUIRED")
     @DecimalMin(value = "0.0", inclusive = false, message = "PRODUCT_PRICE_INVALID")
-    BigDecimal Price;
+    BigDecimal price;
 
     @NotNull(message = "PRODUCT_DISCOUNT_PRICE_REQUIRED")
     @DecimalMin(value = "0.0", inclusive = false, message = "PRODUCT_DISCOUNT_PRICE_INVALID")

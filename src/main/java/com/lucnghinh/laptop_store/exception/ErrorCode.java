@@ -74,7 +74,9 @@ public enum ErrorCode {
     USER_DOB_INVALID(1038, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
 
     INVALID_SORT_DIRECTION(1039, "invalid sort direction", HttpStatus.BAD_REQUEST),
-    INVALID_SORT_FIELD(1009, "Invalid sort field", HttpStatus.BAD_REQUEST);
+    INVALID_SORT_FIELD(1040, "Invalid sort field", HttpStatus.BAD_REQUEST),
+
+    INVALID_PARAMETER_FORMAT(1041,"The parameter '%s' provided is not in the correct data type format.",HttpStatus.BAD_REQUEST);
 
     ErrorCode(int code, String message,HttpStatus httpStatus) {
         this.message = message;

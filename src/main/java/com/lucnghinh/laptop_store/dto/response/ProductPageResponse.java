@@ -6,9 +6,8 @@ import lombok.experimental.FieldDefaults;
 import java.util.List;
 
 @Builder
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductPageResponse {
     List<ProductResponse> products;

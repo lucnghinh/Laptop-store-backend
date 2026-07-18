@@ -7,6 +7,7 @@ import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.Map;
 import java.util.Objects;
@@ -26,23 +27,41 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse> handleValidationException(MethodArgumentNotValidException e) {
-        String enumkey = e.getFieldError().getDefaultMessage();
+        var fieldError = e.getFieldError();
+
+        String enumkey = fieldError != null ? fieldError.getDefaultMessage() : "";
 
         ErrorCode errorCode = ErrorCode.INVALID_KEY;
         Map<String, Object> attributes = null;
         try{
+
+            if (fieldError != null && "typeMismatch".equals(fieldError.getCode())) {
+                errorCode = ErrorCode.INVALID_PARAMETER_FORMAT;
+
+
+                String errorMessage = String.format(errorCode.getMessage(), fieldError.getField());
+
+                return ResponseEntity.status(errorCode.getHttpStatus()).body(ApiResponse.builder()
+                        .code(errorCode.getCode())
+                        .message(errorMessage)
+                        .build());
+            }
+
             errorCode = ErrorCode.valueOf(enumkey);
 
             var constrainViolation = e.getBindingResult().getAllErrors().getFirst().unwrap(ConstraintViolation.class);
 
             attributes = constrainViolation.getConstraintDescriptor().getAttributes();
-        } catch (IllegalArgumentException ex){
+        } catch (IllegalArgumentException ignored){
 
         }
+
 
         return ResponseEntity.status(errorCode.getHttpStatus()).body(ApiResponse.builder()
                 .code(errorCode.getCode())
                 .message(Objects.nonNull(attributes)
+                        && attributes.containsKey(MIN_ATTRIBUTE)
+                        && Objects.nonNull(attributes.get(MIN_ATTRIBUTE))
                         ? mapAttribute(errorCode.getMessage(), attributes)
                         : errorCode.getMessage())
                 .build());
@@ -85,8 +104,21 @@ public class GlobalExceptionHandler {
                 .build());
     }
 
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException  methodArgumentTypeMismatchException){
+        String paramName = methodArgumentTypeMismatchException.getName();
+
+        ErrorCode errorCode = ErrorCode.INVALID_PARAMETER_FORMAT;
+
+        String errorMessage = String.format(errorCode.getMessage(), paramName);
+
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(ApiResponse.builder()
+                .code(errorCode.getCode())
+                .message(errorMessage)
+                .build());
+    }
+
     private String mapAttribute(String message, Map<String, Object> attributes) {
-        String minValue = attributes.get(MIN_ATTRIBUTE).toString();
-        return message.replace("{" + MIN_ATTRIBUTE +"}", minValue);
+        return message.replace("{" + MIN_ATTRIBUTE + "}", attributes.get(MIN_ATTRIBUTE).toString());
     }
 }

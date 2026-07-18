@@ -55,7 +55,7 @@ public class JwtService {
                     .subject(user.getUsername())
                     .issuer("Laptop-store-Lucnghinh.com")
                     .issueTime(new Date())
-                    .expirationTime(new Date(Instant.now().plus(accessTokenExpiresInMs, ChronoUnit.SECONDS).toEpochMilli()))
+                    .expirationTime(new Date(Instant.now().plus(accessTokenExpiresInMs, ChronoUnit.MILLIS).toEpochMilli()))
                     .jwtID(UUID.randomUUID().toString())
                     .claim("scope", buildScope(user))
                     .claim("type", "access")
@@ -77,7 +77,7 @@ public class JwtService {
                     .jwtID(UUID.randomUUID().toString())
                     .issueTime(new Date())
                     .issuer("Laptop-store-Lucnghinh.com")
-                    .expirationTime(new Date(Instant.now().plus(refreshTokenExpiresInMs,ChronoUnit.SECONDS).toEpochMilli()))
+                    .expirationTime(new Date(Instant.now().plus(refreshTokenExpiresInMs,ChronoUnit.MILLIS).toEpochMilli()))
                     .claim("type","refresh")
                     .build();
 

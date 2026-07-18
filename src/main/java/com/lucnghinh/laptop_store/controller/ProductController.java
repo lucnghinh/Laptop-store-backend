@@ -1,6 +1,7 @@
 package com.lucnghinh.laptop_store.controller;
 
 
+import com.lucnghinh.laptop_store.dto.request.ProductFilterRequest;
 import com.lucnghinh.laptop_store.dto.response.ApiResponse;
 import com.lucnghinh.laptop_store.dto.response.ProductPageResponse;
 import lombok.AccessLevel;
@@ -50,14 +51,10 @@ public class ProductController {
     }
 
     @GetMapping
-    public ApiResponse<ProductPageResponse> getProductsWithPagination(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "asc") String direction) {
+    public ApiResponse<ProductPageResponse> getProductsWithPagination(ProductFilterRequest filterRequest) {
 
         return ApiResponse.<ProductPageResponse>builder()
-                .data(productService.getProductsWithPagination(page, size, sortBy, direction))
+                .data(productService.getProductsWithPagination(filterRequest))
                 .build();
     }
 
