@@ -5,11 +5,11 @@ import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Getter
 
 public enum ErrorCode {
-    // ERROR KEYENUM
+
     INVALID_KEY(1001, "Invalid message key", HttpStatus.BAD_REQUEST),
 
     // ERROR PRODUCT
@@ -76,7 +76,14 @@ public enum ErrorCode {
     INVALID_SORT_DIRECTION(1039, "invalid sort direction", HttpStatus.BAD_REQUEST),
     INVALID_SORT_FIELD(1040, "Invalid sort field", HttpStatus.BAD_REQUEST),
 
-    INVALID_PARAMETER_FORMAT(1041,"The parameter '%s' provided is not in the correct data type format.",HttpStatus.BAD_REQUEST);
+    INVALID_PARAMETER_FORMAT(1041,"The parameter '%s' provided is not in the correct data type format.",HttpStatus.BAD_REQUEST),
+
+    FILE_IS_EMPTY(1042, "Uploaded file cannot be empty", HttpStatus.BAD_REQUEST),
+    INVALID_FILE_NAME(1043, "Invalid file name or missing file extension", HttpStatus.BAD_REQUEST),
+    FILE_UPLOAD_FAILED(1044, "Could not store file. Please try again later.", HttpStatus.INTERNAL_SERVER_ERROR),
+    UNSUPPORTED_FILE_TYPE(1045, "Only PNG images are allowed", HttpStatus.BAD_REQUEST),
+    FILE_TOO_LARGE(1006, "File size exceeds the maximum permitted limit of 5MB", HttpStatus.BAD_REQUEST)
+    ;
 
     ErrorCode(int code, String message,HttpStatus httpStatus) {
         this.message = message;

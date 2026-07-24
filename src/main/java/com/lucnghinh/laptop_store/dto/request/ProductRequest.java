@@ -49,8 +49,6 @@ public class ProductRequest {
     @Min(value = 0, message = "PRODUCT_STOCK_INVALID")
     int stock;
 
-    @Size(max = 500, message = "PRODUCT_THUMBNAIL_MAX_LENGTH")
-    String thumbnail;
 
     boolean active;
 }

@@ -5,6 +5,7 @@ import com.lucnghinh.laptop_store.dto.response.ProductDetailResponse;
 import com.lucnghinh.laptop_store.dto.response.ProductResponse;
 import com.lucnghinh.laptop_store.entity.Product;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 

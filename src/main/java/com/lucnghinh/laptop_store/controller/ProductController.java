@@ -15,6 +15,7 @@ import com.lucnghinh.laptop_store.dto.response.ProductResponse;
 import com.lucnghinh.laptop_store.service.ProductService;
 
 import jakarta.validation.Valid;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/products")
@@ -29,11 +30,11 @@ public class ProductController {
     }
 
     @PostMapping
-    public ApiResponse<ProductResponse> addProduct(@Valid @RequestBody ProductRequest productRequest) {
-        ProductResponse productResponse = productService.addProduct(productRequest);
-        ApiResponse<ProductResponse> apiResponse = new ApiResponse<>();
-        apiResponse.setData(productResponse);
-        return apiResponse;
+    public ApiResponse<ProductResponse> addProduct(@Valid @ModelAttribute ProductRequest productRequest, @RequestParam("thumbnail") MultipartFile thumbnail) {
+        ProductResponse productResponse = productService.addProduct(productRequest, thumbnail);
+        return ApiResponse.<ProductResponse>builder()
+                .data(productResponse)
+                .build();
     }
 
     @PutMapping("/{id}")

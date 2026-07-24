@@ -30,14 +30,6 @@ public class ApplicationInitConfig {
     public ApplicationRunner applicationRunner(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
 
-//            if(roleRepository.findById("ADMIN").isEmpty()){
-//                Role role = Role.builder()
-//                        .name("ADMIN")
-//                        .description("Admin role")
-//                        .permissions(new HashSet<>())
-//                        .build();
-//            }
-
             if(userRepository.findByUsername("admin").isEmpty()) {
                 User user = User.builder()
                         .username("admin")
@@ -45,7 +37,6 @@ public class ApplicationInitConfig {
                         .firstName("System")
                         .lastName("Administrator")
                         .email("admin@localhost")
-//                        .roles(Set.of(adminRole))
                         .build();
 
                 userRepository.save(user);

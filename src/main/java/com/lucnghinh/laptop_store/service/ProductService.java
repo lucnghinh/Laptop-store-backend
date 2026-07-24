@@ -7,6 +7,7 @@ import com.lucnghinh.laptop_store.exception.AppException;
 import com.lucnghinh.laptop_store.exception.DuplicateResourceException;
 import com.lucnghinh.laptop_store.exception.ErrorCode;
 import com.lucnghinh.laptop_store.mapper.ProductMapper;
+import com.lucnghinh.laptop_store.service.impl.FileStorageServiceImpl;
 import com.lucnghinh.laptop_store.specification.ProductSpecification;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ import com.lucnghinh.laptop_store.dto.response.ProductResponse;
 import com.lucnghinh.laptop_store.entity.Product;
 import com.lucnghinh.laptop_store.exception.ResourceNotFoundException;
 import com.lucnghinh.laptop_store.repository.ProductRepository;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
 
@@ -34,6 +36,7 @@ import java.util.Set;
 public class ProductService {
     ProductRepository productRepository;
     ProductMapper productMapper;
+    FileStorageServiceImpl fileStorageService;
 
     private static final Set<String> ALLOWED_SORT_FIELDS = Set.of(
             "id",
@@ -59,12 +62,16 @@ public class ProductService {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public ProductResponse  addProduct(ProductRequest request) {
+    public ProductResponse  addProduct(ProductRequest request, MultipartFile thumbnail) {
         if (productRepository.existsByname(request.getName())) {
             throw new DuplicateResourceException(ErrorCode.PRODUCT_ALREADY_EXISTS);
         }
 
+        String thumbnailName = fileStorageService.store(thumbnail);
+
         Product product = productMapper.toProduct(request);
+        product.setThumbnail(thumbnailName);
+
         product = productRepository.save(product);
         return productMapper.toProductResponse(product);
     }
