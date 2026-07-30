@@ -9,4 +9,6 @@ public interface FileStorageService {
 
 
     String store(MultipartFile file) throws IOException;
+
+    void delete(String fileName);
 }

@@ -82,7 +82,8 @@ public enum ErrorCode {
     INVALID_FILE_NAME(1043, "Invalid file name or missing file extension", HttpStatus.BAD_REQUEST),
     FILE_UPLOAD_FAILED(1044, "Could not store file. Please try again later.", HttpStatus.INTERNAL_SERVER_ERROR),
     UNSUPPORTED_FILE_TYPE(1045, "Only PNG images are allowed", HttpStatus.BAD_REQUEST),
-    FILE_TOO_LARGE(1006, "File size exceeds the maximum permitted limit of 5MB", HttpStatus.BAD_REQUEST)
+    FILE_TOO_LARGE(1046, "File size exceeds the maximum permitted limit of 5MB", HttpStatus.BAD_REQUEST),
+    FILE_DELETE_FAILED(1047,"File does not exist or has been deleted", HttpStatus.NOT_FOUND),
     ;
 
     ErrorCode(int code, String message,HttpStatus httpStatus) {

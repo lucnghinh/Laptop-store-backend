@@ -2,6 +2,7 @@ package com.lucnghinh.laptop_store.service.impl;
 
 import com.lucnghinh.laptop_store.exception.AppException;
 import com.lucnghinh.laptop_store.exception.ErrorCode;
+import com.lucnghinh.laptop_store.exception.ResourceNotFoundException;
 import com.lucnghinh.laptop_store.service.FileStorageService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -67,4 +68,20 @@ public class FileStorageServiceImpl implements FileStorageService {
             throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
         }
     }
-}
+
+    @Override
+    public void delete(String fileName) {
+        if (fileName == null || fileName.isBlank()) {
+            return;
+        }
+        Path filePath = Paths.get("uploads", fileName);
+
+        try {
+            Files.deleteIfExists(filePath);
+        } catch (IOException e) {
+            throw new ResourceNotFoundException(ErrorCode.FILE_DELETE_FAILED);
+        }
+
+        }
+
+    }

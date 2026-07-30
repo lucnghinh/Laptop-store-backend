@@ -9,6 +9,7 @@ import com.lucnghinh.laptop_store.exception.ErrorCode;
 import com.lucnghinh.laptop_store.mapper.ProductMapper;
 import com.lucnghinh.laptop_store.service.impl.FileStorageServiceImpl;
 import com.lucnghinh.laptop_store.specification.ProductSpecification;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -56,9 +57,12 @@ public class ProductService {
 
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteProductById(String id) {
-        productRepository.findById(id)
+        Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
-        productRepository.deleteById(id);
+
+        fileStorageService.delete(product.getThumbnail());
+
+            productRepository.deleteById(id);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -145,4 +149,30 @@ public class ProductService {
                 .build();
     }
 
+    @Transactional
+    public ProductResponse updateThumbnail(String id, MultipartFile file) {
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        String oldThumbnail = product.getThumbnail();
+
+        String newThumbnail = fileStorageService.store(file);
+
+        try {
+            product.setThumbnail(newThumbnail);
+            product = productRepository.save(product);
+        } catch (Exception e) {
+            fileStorageService.delete(newThumbnail);
+            throw e;
+        }
+
+        try {
+            fileStorageService.delete(oldThumbnail);
+        } catch (Exception e) {
+            // log.warn(...)
+        }
+
+        return productMapper.toProductResponse(product);
+    }
 }

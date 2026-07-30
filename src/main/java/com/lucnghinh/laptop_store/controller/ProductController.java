@@ -40,15 +40,17 @@ public class ProductController {
     @PutMapping("/{id}")
     public ApiResponse<ProductResponse> updateProductById(@PathVariable String id,@Valid @RequestBody ProductRequest productRequest) {
          ProductResponse productResponse = productService.updateProductById(id, productRequest);
-         ApiResponse<ProductResponse> apiResponse = new ApiResponse<>();
-         apiResponse.setData(productResponse);
-        return apiResponse;
+        return ApiResponse.<ProductResponse>builder()
+                .data(productResponse)
+                .build();
     }
 
 
     @DeleteMapping("/{id}")
-    public void deleteProductById(@PathVariable String id) {
+    public ApiResponse<Void> deleteProductById(@PathVariable String id) {
         productService.deleteProductById(id);
+        return ApiResponse.<Void>builder()
+                .build();
     }
 
     @GetMapping
@@ -56,6 +58,14 @@ public class ProductController {
 
         return ApiResponse.<ProductPageResponse>builder()
                 .data(productService.getProductsWithPagination(filterRequest))
+                .build();
+    }
+
+    @PutMapping("/{id}/thumbnail")
+    public ApiResponse<ProductResponse> updateThumbnail(@PathVariable String id,@RequestParam("file") MultipartFile file) {
+        ProductResponse productResponse = productService.updateThumbnail(id, file);
+        return ApiResponse.<ProductResponse>builder()
+                .data(productResponse)
                 .build();
     }
 
