@@ -1,9 +1,6 @@
 package com.lucnghinh.laptop_store.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -26,7 +23,11 @@ public class Product {
     BigDecimal price;
     BigDecimal discountPrice;
     String brand;
-    String category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    Category category;
+
     int stock;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;

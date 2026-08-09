@@ -20,5 +20,5 @@ public class ProductResponse {
     String slug;
     String thumbnail;
     String brand;
-    String category;
+    CategorySummaryResponse category;
 }

@@ -1,6 +1,7 @@
 package com.lucnghinh.laptop_store.dto.request;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
@@ -38,9 +39,8 @@ public class ProductRequest {
     @Size(max = 100, message = "PRODUCT_BRAND_MAX_LENGTH")
     String brand;
 
-    @NotBlank(message = "PRODUCT_CATEGORY_REQUIRED")
-    @Size(max = 100, message = "PRODUCT_CATEGORY_MAX_LENGTH")
-    String category;
+    @NotNull(message = "PRODUCT_CATEGORY_REQUIRED")
+    UUID categoryId;
 
     @NotBlank(message = "PRODUCT_SLUG_REQUIRED")
     @Size(max = 255, message = "PRODUCT_SLUG_MAX_LENGTH")

@@ -19,7 +19,7 @@ public class ProductDetailResponse {
     BigDecimal price;
     BigDecimal discountPrice;
     String brand;
-    String category;
+    CategoryResponse category;
     String slug;
     String thumbnail;
     int stock;

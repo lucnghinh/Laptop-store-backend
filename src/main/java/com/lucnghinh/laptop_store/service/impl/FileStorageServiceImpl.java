@@ -81,7 +81,6 @@ public class FileStorageServiceImpl implements FileStorageService {
         } catch (IOException e) {
             throw new ResourceNotFoundException(ErrorCode.FILE_DELETE_FAILED);
         }
-
         }
 
     }

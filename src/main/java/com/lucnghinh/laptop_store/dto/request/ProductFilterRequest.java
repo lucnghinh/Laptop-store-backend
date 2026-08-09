@@ -1,10 +1,10 @@
 package com.lucnghinh.laptop_store.dto.request;
 
-import jakarta.validation.constraints.Min;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 
 @AllArgsConstructor
@@ -16,10 +16,9 @@ public class ProductFilterRequest {
     int size = 10;
     String sortBy = "id";
     String direction = "asc";
-
     String keyword;
     String brand;
-    String category;
+    UUID category;
     BigDecimal minPrice;
     BigDecimal maxPrice;
 }

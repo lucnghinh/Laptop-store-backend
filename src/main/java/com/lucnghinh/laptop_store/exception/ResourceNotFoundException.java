@@ -1,6 +1,8 @@
 package com.lucnghinh.laptop_store.exception;
 
 
+import java.util.function.Supplier;
+
 public class ResourceNotFoundException extends RuntimeException {
     ErrorCode errorCode;
 

@@ -29,5 +29,4 @@ public class UserController {
                 .data(userService.updateUserRoles(username,updateRoleRequest.getRoles()))
                 .build();
     }
-
 }

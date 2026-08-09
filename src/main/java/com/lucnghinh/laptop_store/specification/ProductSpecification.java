@@ -4,6 +4,7 @@ import com.lucnghinh.laptop_store.entity.Product;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public class ProductSpecification {
     public static Specification<Product> hasName(String name) {
@@ -25,12 +26,12 @@ public class ProductSpecification {
         };
     }
 
-    public static Specification<Product> hasCategory(String category){
+    public static Specification<Product> hasCategory(UUID category){
         return ((root, query, criteriaBuilder) ->  {
-            if(category == null || category.trim().isEmpty()){
+            if(category == null){
                 return criteriaBuilder.conjunction();
             }
-            return criteriaBuilder.equal(criteriaBuilder.lower(root.get("category")), category.toLowerCase());
+            return criteriaBuilder.equal(root.get("category").get("Id"), category);
         });
     }
 

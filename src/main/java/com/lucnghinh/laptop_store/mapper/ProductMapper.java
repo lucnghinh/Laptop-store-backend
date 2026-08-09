@@ -11,11 +11,14 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
+    @Mapping(target = "category",ignore = true)
     Product toProduct(ProductRequest request);
 
     ProductResponse toProductResponse(Product product);
 
+    @Mapping(target = "category",ignore = true)
     ProductDetailResponse toProductDetailResponse(Product product);
 
+    @Mapping(target = "category",ignore = true)
     List<ProductResponse> toProductResponseList(List<Product> products);
 }

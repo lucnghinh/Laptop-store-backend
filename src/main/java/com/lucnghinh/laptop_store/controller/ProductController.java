@@ -25,8 +25,10 @@ public class ProductController {
     ProductService productService;
 
     @GetMapping("/{id}")
-    public ProductDetailResponse getProductById(@PathVariable String id) {
-        return productService.getProductById(id);
+    public ApiResponse<ProductDetailResponse> getProductById(@PathVariable String id) {
+        return ApiResponse.<ProductDetailResponse>builder()
+                .data(productService.getProductById(id))
+                .build();
     }
 
     @PostMapping
@@ -54,8 +56,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public ApiResponse<ProductPageResponse> getProductsWithPagination(ProductFilterRequest filterRequest) {
-
+    public ApiResponse<ProductPageResponse> getProductsWithPagination(@ModelAttribute ProductFilterRequest filterRequest) {
         return ApiResponse.<ProductPageResponse>builder()
                 .data(productService.getProductsWithPagination(filterRequest))
                 .build();
@@ -68,5 +69,4 @@ public class ProductController {
                 .data(productResponse)
                 .build();
     }
-
 }

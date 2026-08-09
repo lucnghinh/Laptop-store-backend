@@ -3,10 +3,12 @@ package com.lucnghinh.laptop_store.service;
 
 import com.lucnghinh.laptop_store.dto.request.ProductFilterRequest;
 import com.lucnghinh.laptop_store.dto.response.ProductPageResponse;
+import com.lucnghinh.laptop_store.entity.Category;
 import com.lucnghinh.laptop_store.exception.AppException;
 import com.lucnghinh.laptop_store.exception.DuplicateResourceException;
 import com.lucnghinh.laptop_store.exception.ErrorCode;
 import com.lucnghinh.laptop_store.mapper.ProductMapper;
+import com.lucnghinh.laptop_store.repository.CategoryRepository;
 import com.lucnghinh.laptop_store.service.impl.FileStorageServiceImpl;
 import com.lucnghinh.laptop_store.specification.ProductSpecification;
 import jakarta.transaction.Transactional;
@@ -38,6 +40,7 @@ public class ProductService {
     ProductRepository productRepository;
     ProductMapper productMapper;
     FileStorageServiceImpl fileStorageService;
+    CategoryRepository  categoryRepository;
 
     private static final Set<String> ALLOWED_SORT_FIELDS = Set.of(
             "id",
@@ -71,9 +74,13 @@ public class ProductService {
             throw new DuplicateResourceException(ErrorCode.PRODUCT_ALREADY_EXISTS);
         }
 
+        Category category = categoryRepository.findByIdAndActiveTrue(request.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.CATEGORY_NOT_FOUND));
+
         String thumbnailName = fileStorageService.store(thumbnail);
 
         Product product = productMapper.toProduct(request);
+        product.setCategory(category);
         product.setThumbnail(thumbnailName);
 
         product = productRepository.save(product);

@@ -84,6 +84,8 @@ public enum ErrorCode {
     UNSUPPORTED_FILE_TYPE(1045, "Only PNG images are allowed", HttpStatus.BAD_REQUEST),
     FILE_TOO_LARGE(1046, "File size exceeds the maximum permitted limit of 5MB", HttpStatus.BAD_REQUEST),
     FILE_DELETE_FAILED(1047,"File does not exist or has been deleted", HttpStatus.NOT_FOUND),
+    CATEGORY_ALREADY_EXISTS(1048, "Category exists with name", HttpStatus.CONFLICT),
+    CATEGORY_NOT_FOUND(10049, "Category does not exist", HttpStatus.NOT_FOUND)
     ;
 
     ErrorCode(int code, String message,HttpStatus httpStatus) {
