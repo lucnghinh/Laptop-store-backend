@@ -2,7 +2,6 @@ package com.lucnghinh.laptop_store.controller.admin;
 
 import com.lucnghinh.laptop_store.dto.response.ApiResponse;
 import com.lucnghinh.laptop_store.dto.response.CategoryAdminResponse;
-import com.lucnghinh.laptop_store.dto.response.CategoryResponse;
 import com.lucnghinh.laptop_store.service.CategoryService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RestController
 @RequestMapping("/admin/categories")
-public class CategoryAdminController {
+public class AdminCategoryController {
     CategoryService categoryService;
 
     @GetMapping
